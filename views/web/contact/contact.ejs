@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLinEt ⁜ Contact</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .container {
+            box-shadow: 10px 10px 15px rgba(0,0,0,.5);
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+    <%- include("../../components/header", {
+        catagory:typeof ___laptop_catagory !== 'undefined' ? ___laptop_catagory : undefined,
+        isAdmin:___isAdminLogin,
+    }) %>   
+    <div class="container bg-light p-3 mt-3">
+        <h1 class="text-center">Contact us</h1> <hr>
+    </div>
+    <%- include("../../components/footer") %>
+</body>
+</html>

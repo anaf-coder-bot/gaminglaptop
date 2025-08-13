@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLinEt ⁜ Login</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .container {
+            box-shadow: 10px 10px 15px rgba(0,0,0,.5);
+            border-radius: 15px;
+            width: 50%;
+        }
+        .form-control {
+            width: 50%;
+            margin: 5px auto 5px auto;
+            border: none;
+            border-bottom: dotted;
+            outline: none;
+        }
+        #btn-login {
+            width: 50%;
+        }
+
+        @media (max-width:768px) {
+            .container, .form-control {
+                width: 100%;
+            }
+            #btn-login {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <%- include("../../components/header", {
+        catagory:typeof ___laptop_catagory !== 'undefined' ? ___laptop_catagory : undefined,
+    }) %>
+
+    <!-- Danger msg -->
+    <% if (typeof error_msg !== 'undefined') { %>
+        <div class="alert alert-dismissible alert-danger" id="msg">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <h4 class="alert-heading mb-0 mb-0">Danger!</h4>
+            <p class="mb-0 mt-0"><%=error_msg%></p>
+        </div>
+    <% } else if (typeof warning_msg !== 'undefined') { %>
+
+    <!-- Warning msg -->
+        <div class="alert alert-dismissible alert-warning">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <h4 class="alert-heading mb-0">Warning!</h4>
+            <p class="mb-0"><%=warning_msg%></p>
+        </div>
+        
+    <!-- Success msg -->
+    <% } else if (typeof success_msg !== 'undefined') { %>
+        <div class="alert alert-dismissible alert-success">
+            <h4 class="alert-heading mb-0 mb-0">Success!</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <p class="mb-0"><%=success_msg%></p>
+        </div>
+    <!--  -->
+    <% } %>
+
+    <div class="container bg-light p-3 mt-3">
+        <h1 class="text-center">Login</h1>
+        <p class="text-center" style="color: red; font-size: .7rem;">* This page is for admin only!</p> <hr>
+        <form action="" method="post" class="text-center">
+            <div class="mb-3">
+                <label for="">Username</label>
+                <input type="text" name="username" required id="username" placeholder="username" class="form-control p-3 text-center">
+            </div>
+            <div class="mb-3">
+                <label for="">Password</label>
+                <input type="password" name="password" required id="password" placeholder="Password" class="form-control p-3 text-center">
+            </div>
+            <input type="submit" value="Login" class="btn btn-outline-primary mb-3 mt-3" name="btn" id="btn-login">
+        </form> 
+        <p class="text-center">
+            Forget your password? <a href="/login/reset-password" style="color: lightblue;">Reset here</a>
+        </p>
+    </div>
+    <%- include("../../components/footer") %>
+</body>
+</html>

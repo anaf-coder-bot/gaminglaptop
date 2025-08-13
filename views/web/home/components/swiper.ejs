@@ -1,0 +1,88 @@
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+
+<style>
+  .swiper {
+    width: 80%;
+    max-width: 900px;
+    height: 450px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    margin: 20px auto;
+    background: #000;
+    position: relative;
+  }
+
+  .swiper-slide {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .swiper-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .slide-description {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.4);
+    color: #fff;
+    padding: 15px;
+    font-size: 18px;
+    box-sizing: border-box;
+  }
+
+  /* Example fallback background if no image */
+  .slide1 { background: linear-gradient(135deg, #667eea, #764ba2); }
+
+  @media (max-width:768px) {
+    .swiper {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+</style>
+
+<div class="swiper">
+  <div class="swiper-wrapper">
+    <% swipers.forEach((key) => { %>
+      <div class="swiper-slide">
+          <a href="/laptop/<%= key[0] %>">
+            <img src="<%= key[2] %>" alt="">
+          </a>
+            <div class="slide-description" style="text-transform: capitalize;"><%= key[1] %></div>
+      </div>
+      <% }) %>
+  </div>
+
+  <!-- Pagination -->
+  <div class="swiper-pagination"></div>
+
+  <!-- Navigation buttons -->
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  const swiper = new Swiper('.swiper', {
+    loop: true,
+    autoplay: true,
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true
+    },
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev'
+    }
+  });
+</script>

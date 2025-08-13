@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/css/style.css" rel="stylesheet">
+    <style>
+        /* Sidebar styles */
+        #sidebar {
+            min-height: 100vh;
+        }
+        @media (max-width:768px) {
+                #sidebar {
+                    min-height: 10vh;
+                }
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <%- include("../../components/header", {
+        catagory:typeof ___laptop_catagory !== 'undefined' ? ___laptop_catagory : undefined,
+        isAdmin:___isAdminLogin,
+        ___on_admin:true,
+    }) %>
+
+    <!-- Danger msg -->
+    <% if (typeof error_msg !== 'undefined') { %>
+        <div class="alert alert-dismissible alert-danger" id="msg">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <h4 class="alert-heading mb-0 mb-0">Danger!</h4>
+            <p class="mb-0 mt-0"><%=error_msg%></p>
+        </div>
+    <% } else if (typeof warning_msg !== 'undefined') { %>
+
+    <!-- Warning msg -->
+        <div class="alert alert-dismissible alert-warning">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <h4 class="alert-heading mb-0">Warning!</h4>
+            <p class="mb-0"><%=warning_msg%></p>
+        </div>
+        
+    <!-- Success msg -->
+    <% } else if (typeof success_msg !== 'undefined') { %>
+        <div class="alert alert-dismissible alert-success">
+            <h4 class="alert-heading mb-0 mb-0">Success!</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <p class="mb-0"><%=success_msg%></p>
+        </div>
+    <!--  -->
+    <% } %>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav id="sidebar" class="col-md-2 bg-white border-end p-3">
+                <h5 class="border-bottom pb-2">Menu</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link" href="/admin/add">➕ Add Laptop</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">✏️ Edit Laptop</a>
+                        <div class="dropdown-menu">
+                            <% if (typeof LAPTOP_CATAGORY !== 'undefined') { %>
+                                <% LAPTOP_CATAGORY.forEach(c => { %>
+                                    <a class="dropdown-item" href="/admin/edit-catagory/<%=c%>" style="text-transform: capitalize;"><%=c%></a>
+                                <% }) %>
+                            <% } %>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-10 ms-sm-auto px-md-4 mt-4">
+                <h2 class="mb-4">Dashboard</h2>
+
+                <!-- Stats Cards -->
+                <div class="row g-4">
+                    <% LAPTOP_CATAGORY.forEach(cat => { %>
+                        <div class="col-6 col-sm-4 col-md-3">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body text-center">
+                                    <h6 class="text-uppercase text-muted"><%= cat %></h6>
+                                    <a href="/catagory/<%=cat%>">
+                                        <h3><%= laptopCount[cat] || 0 %></h3>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <%- include("../../components/footer") %>
+
+</body>
+</html>

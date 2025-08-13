@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLinEt ⁜ Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/css/style.css" rel="stylesheet">
+    <style>
+        /* Sidebar styles */
+        .container {
+            width: 50%;
+            border-radius: 15px;
+            box-shadow: 10px 10px 15px rgba(0,0,0,.5);
+        }
+        .form-control, .form-select, .btn {
+            width: 50%;
+            margin: 5px auto 0 auto;
+        }
+        @media (max-width:768px) {
+                .container, .form-control, .form-select, .btn {
+                    width: 100%;
+                }
+        }
+    </style>
+</head>
+<body>
+    <%- include("../../components/header", {
+        catagory:typeof ___laptop_catagory !== 'undefined' ? ___laptop_catagory : undefined,
+        isAdmin:___isAdminLogin,
+    }) %>
+
+    <!-- Danger msg -->
+    <% if (typeof error_msg !== 'undefined') { %>
+        <div class="alert alert-dismissible alert-danger" id="msg">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <h4 class="alert-heading mb-0 mb-0">Danger!</h4>
+            <p class="mb-0 mt-0"><%=error_msg%></p>
+        </div>
+    <% } else if (typeof warning_msg !== 'undefined') { %>
+
+    <!-- Warning msg -->
+        <div class="alert alert-dismissible alert-warning">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <h4 class="alert-heading mb-0">Warning!</h4>
+            <p class="mb-0"><%=warning_msg%></p>
+        </div>
+        
+    <!-- Success msg -->
+    <% } else if (typeof success_msg !== 'undefined') { %>
+        <div class="alert alert-dismissible alert-success">
+            <h4 class="alert-heading mb-0 mb-0">Success!</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <p class="mb-0"><%=success_msg%></p>
+        </div>
+    <!--  -->
+    <% } %>
+    <% const is_edit_ = typeof is_edit != "undefined" ? true : false %>
+    <div class="container bg-light p-3 mt-3">
+        <h1 class="text-center"><%=is_edit_ ? `Edit ${laptop.model}` : 'Add' %> Laptop</h1> <hr>
+        <form action="" method="post" class="text-center" enctype="multipart/form-data">
+            <% const first = ['name', 'model', 'processor', 'graphics', 'ram', 'storage', 'display', 'screen_width'] %>
+            <% first.forEach(f => { %>
+                <div class="mb-3">
+                    <label for="" style="text-transform: capitalize;">*<%=f%></label>
+                    <input type="text" name="<%=f%>" id="<%=f%>" maxlength="50" class="form-control text-center" placeholder="<%=f%>" required value="<%=is_edit_ ? laptop[f] : ''%>">
+                </div>
+            <% }) %>
+            <div class="mb-3">
+                <label for="">*Catagory</label>
+                <select name="catagory" id="catagory" required class="form-select text-center" style="text-transform: capitalize;">
+                    <option value="">-----</option>
+                    <% LAPTOP_CATAGORY.forEach(l => { %>
+                        <option value="<%=l%>" <%=is_edit_ && l == laptop.catagory ? "selected" : '' %>><%=l%></option>
+                    <% }) %>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="">*State</label>
+                <select name="state" id="state" required class="form-select text-center" style="text-transform: capitalize;">
+                    <option value="new" <%=is_edit_ && laptop.state=='new' ? "selected" : ''%>>Brand new</option>
+                    <option value="used" <%=is_edit_ && laptop.state=='used' ? "selected" : ''%>>Used</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="">Instock</label>
+                <input type="number" name="in_stock" id="in_stock" required class="form-control text-center" placeholder="in stock" value="<%=is_edit_ ? laptop.in_stock : ''%>">
+            </div>
+            <div class="mb-3">
+                <label for="">Description</label>
+                <textarea name="description" id="description" class="form-control text-center" placeholder="description"><%=is_edit_ ? laptop.description : '' %></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="">*Price</label>
+                <input type="number" name="price" id="price" required class="form-control text-center" placeholder="price" value="<%=is_edit_ ? laptop.price : ''%>">
+            </div>
+            <div class="mb-3">
+                <label for="">*Image 1</label>
+                <% if (is_edit_) { %>
+                    <!-- Show current image -->
+                    <div style="margin-bottom: 10px;">
+                        <a href="<%= laptop['img_1'] %>" target="_blank">
+                            <img src="<%= laptop['img_1'] %>" 
+                                alt="Image 1" 
+                                style="max-width: 150px; max-height: 150px; border: 1px solid #ccc; border-radius: 5px;">
+                        </a>
+                    </div>
+                <% } %>
+                <input type="file" accept="image/*" name="img_1" id="img_1" class="form-control" <%=is_edit_ ? '' : "required" %>>
+            </div>
+            <% [2, 3, 4, 5, 6].forEach(i => { %>
+                <div class="mb-3">
+                    <label for="">Image <%= i %></label>
+                    
+                    <% if (is_edit_ && laptop['img_' + i]) { %>
+                        <!-- Show current image -->
+                        <div style="margin-bottom: 10px;">
+                            <a href="<%= laptop['img_' + i] %>" target="_blank">
+                                <img src="<%= laptop['img_' + i] %>" 
+                                    alt="Image <%= i %>" 
+                                    style="max-width: 150px; max-height: 150px; border: 1px solid #ccc; border-radius: 5px;">
+                            </a>
+                        </div>
+                    <% } %>
+
+                    <!-- File input for updating -->
+                    <input type="file" accept="image/*" name="img_<%= i %>" id="img_<%= i %>" class="form-control" <%= i === 1 && !is_edit_ ? 'required' : '' %>>
+                </div>
+            <% }) %>
+
+            <input type="submit" value="<%=is_edit_ ? 'Edit' : 'Add'%>" class="btn btn-primary mb-3" name="" id="">
+            <button class="btn btn-danger" type="button" onclick="confirmAndRun()">Delete</button>
+        </form>
+    </div>
+    <%- include("../../components/footer") %>
+    <% if (is_edit_) { %> 
+        <script>
+            const data= {id:"<%=laptop.id%>"}
+
+            function confirmAndRun() {
+                if (confirm("⚠ Are you sure you want to run this? This action cannot be undone!")) {
+                    delete_laptop();
+                } else {
+                    alert("Action cancelled ✅");
+                }
+            }
+
+            function delete_laptop () {
+                fetch("/admin/delete/laptop", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                })
+                .then(async res => await res.json())
+                .then(data => {
+                    if (data.msg) {
+                        alert(data.msg);
+                        location.href = "/admin";
+                    };
+                })
+            }
+        </script>
+    <% } %>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">
+        <img src="/logo.jpeg" style="width: 50px; border-radius: 15px;" alt=""> <span style="color: green;">GL</span><span style="color: gold;">in</span><span style="color: red;">Et</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link <%=typeof ___on_home !== 'undefined' ? 'active' : '' %>" href="/">Home
+          </a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle <%=typeof ___on_catagory !== 'undefined' ? 'active' : '' %>" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Catgory</a>
+          <div class="dropdown-menu">
+            <% if (typeof catagory !== 'undefined') { %>
+                <% catagory.forEach(c => { %>
+                    <a class="dropdown-item" href="/catagory/<%=c%>" style="text-transform: capitalize;"><%=c%></a>
+                <% }) %>
+            <% } else { %>
+                <a href="#" class="dropdown-item">No catagory</a>
+            <% } %>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About us</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about/contact">Contact us</a>
+        </li>
+        <li class="nav-item">
+          <% if (typeof isAdmin == 'undefined' || !isAdmin) { %>
+            <a class="nav-link <%=typeof ___on_login !== 'undefined' ? 'active' : '' %>" href="/login">Login</a>
+          <% } else { %>
+            <a class="nav-link" <%=typeof ___on_admin !== 'undefined' ? 'active' : '' %> href="/admin">Admin</a>
+          <% } %>
+        </li>
+        <% if (typeof isAdmin != 'undefined') { %>
+          <a href="/login/logout" class="nav-link text-danger">Logout</a>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" 
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" 
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" 
+        integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" 
+        crossorigin="anonymous"></script>

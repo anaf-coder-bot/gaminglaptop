@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLinEt ⁜ <%=pc.name%></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .container {
+            box-shadow: 10px 10px 15px rgba(0,0,0,.5);
+            border-radius: 15px;
+        }
+        #mainImage {
+            width: 600px;    /* fixed width */
+            height: 550px;   /* fixed height */
+            object-fit: cover; /* crop instead of stretch */
+            border-radius: 10px; /* optional rounded corners */
+        }
+    </style>
+</head>
+<body>
+    <%- include("../../components/header", {
+        catagory:typeof ___laptop_catagory !== 'undefined' ? ___laptop_catagory : undefined,
+        isAdmin:___isAdminLogin,
+    }) %>
+    <div class="container my-5">
+
+        <!-- Danger msg -->
+    <% if (typeof error_msg !== 'undefined') { %>
+        <div class="alert alert-dismissible alert-danger" id="msg">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <h4 class="alert-heading mb-0 mb-0">Danger!</h4>
+            <p class="mb-0 mt-0"><%=error_msg%></p>
+        </div>
+    <% } else if (typeof warning_msg !== 'undefined') { %>
+
+    <!-- Warning msg -->
+        <div class="alert alert-dismissible alert-warning">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <h4 class="alert-heading mb-0">Warning!</h4>
+            <p class="mb-0"><%=warning_msg%></p>
+        </div>
+        
+    <!-- Success msg -->
+    <% } else if (typeof success_msg !== 'undefined') { %>
+        <div class="alert alert-dismissible alert-success">
+            <h4 class="alert-heading mb-0 mb-0">Success!</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <p class="mb-0"><%=success_msg%></p>
+        </div>
+    <% } %>
+    <!--  -->
+
+    <!-- Laptop Title -->
+    <h1 class="mb-4 text-center fw-bold" style="text-transform: capitalize;"><%= pc.name %> - <%= pc.model %></h1>
+
+    <div class="row">
+        <!-- Main Image -->
+        <div class="col-md-6">
+            <img id="mainImage"
+                src="<%= pc.img_1 %>" 
+                class="img-fluid rounded shadow main-img"
+                alt="<%= pc.model %>" 
+                data-bs-toggle="modal" 
+                data-bs-target="#imageModal"
+                data-index="0">
+
+            <!-- Additional Images -->
+            <!-- Thumbnails (No modal trigger here) -->
+            <div class="mt-3 d-flex flex-wrap gap-2">
+                <% const allImages = [pc.img_1, pc.img_2, pc.img_3, pc.img_4, pc.img_5, pc.img_6].filter(img => img); %>
+                <% allImages.forEach((img, idx) => { %>
+                    <img src="<%= img %>" 
+                        class="img-thumbnail clickable-img" 
+                        style="width: 100px; height: 100px; object-fit: cover; cursor: pointer;"
+                        data-index="<%= idx %>"
+                        data-img="<%= img %>">
+                <% }) %>
+            </div>
+
+        </div>
+
+        <!-- Laptop Details -->
+        <div class="col-md-6">
+            <h3 class="fw-bold mb-3">Specifications</h3>
+            <ul class="list-group mb-3">
+                <li class="list-group-item" style="text-transform: capitalize;"><strong>Processor:</strong> <%= pc.processor %></li>
+                <li class="list-group-item" style="text-transform: capitalize;"><strong>Graphics:</strong> <%= pc.graphics %></li>
+                <li class="list-group-item" style="text-transform: capitalize;"><strong>RAM:</strong> <%= pc.ram %></li>
+                <li class="list-group-item" style="text-transform: capitalize;"><strong>Storage:</strong> <%= pc.storage %></li>
+                <li class="list-group-item" style="text-transform: capitalize;"><strong>Display:</strong> <%= pc.display %></li>
+                <li class="list-group-item" style="text-transform: capitalize;"><strong>Screen Width:</strong> <%= pc.screen_width %></li>
+                <li class="list-group-item" style="text-transform: capitalize;"><strong>Category:</strong> <%= pc.catagory %></li>
+                <li class="list-group-item" style="text-transform: capitalize;"><strong>State:</strong> <%= pc.state %></li>
+                <li class="list-group-item" style="text-transform: capitalize;"><strong>Instock:</strong> <%= pc.in_stock %></li>
+                <li class="list-group-item" style="text-transform: capitalize;"><strong>Last Modified:</strong> <%= pc.last_modified.toDateString() %></li>
+            </ul>
+
+            <h4 class="text-primary">Price: $<%= Number(pc.price).toLocaleString() %> ETB</h4>
+
+            <p class="mt-3"><strong>Description:</strong><br><%= pc.description %></p>
+        </div>
+    </div>
+    <% if (___isAdminLogin) { %> <a href="/admin/edit/<%=pc.id%>" class="btn btn-warning mt-3 w-50">Edit</a> <% } %>
+    <!-- Suggested Products -->
+    <div class="mt-5">
+        <h3 class="fw-bold mb-4">You might also like</h3>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <% suggestedPCs.forEach(item => { %>
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <img src="<%= item.img_1 %>" 
+                             class="card-img-top" 
+                             alt="<%= item.model %>" 
+                             style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title" style="text-transform: capitalize;"><%= item.model %></h5>
+                            <p class="text-muted small"><%= item.processor %> | <%= item.ram %></p>
+                        </div>
+                        <div class="card-footer bg-white border-0">
+                            <a href="/laptop/<%= item.id %>" class="btn btn-outline-primary w-100">View</a>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+</div>
+
+<!-- Modal with Carousel -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-transparent border-0">
+            <div id="imageCarousel" class="carousel slide" data-bs-interval="false">
+                <div class="carousel-inner">
+                    <% allImages.forEach((img, idx) => { %>
+                        <div class="carousel-item <%= idx === 0 ? 'active' : '' %>">
+                            <img src="<%= img %>" class="d-block w-100 rounded shadow">
+                        </div>
+                    <% }) %>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script to handle main image swap + carousel start index -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const mainImage = document.getElementById("mainImage");
+    const carousel = new bootstrap.Carousel(document.getElementById('imageCarousel'));
+
+    document.querySelectorAll(".clickable-img").forEach(img => {
+        img.addEventListener("click", () => {
+            const imgSrc = img.getAttribute("data-img");
+            const index = parseInt(img.getAttribute("data-index"));
+            mainImage.src = imgSrc;
+            mainImage.setAttribute("data-index", index);
+            carousel.to(index);
+        });
+    });
+
+    // Open modal at correct image index
+    mainImage.addEventListener("click", () => {
+        const index = parseInt(mainImage.getAttribute("data-index")) || 0;
+        carousel.to(index);
+    });
+});
+</script>
+
+
+
+</body>
+</html>

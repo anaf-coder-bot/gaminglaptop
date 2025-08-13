@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLinEt ⁜ Change Admin</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body {
+            /* font-family: Arial, sans-serif; */
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        .container {
+            box-shadow: 10px 10px 15px rgba(0,0,0,.5);
+            border-radius: 15px;
+            width: 50%;
+        }
+        .form-control {
+            width: 50%;
+            margin: 5px auto 0 auto;
+        }
+        input[type="submit"] {
+            width: 50%;
+        }
+
+        @media (max-width:768px) {
+            .container {
+                width: 100%;
+            }
+            .form-control {
+                width: 100%;
+            }
+            input[type="submit"] {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Danger msg -->
+    <% if (typeof error_msg !== 'undefined') { %>
+        <div class="alert alert-dismissible alert-danger" id="msg">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <h4 class="alert-heading mb-0 mb-0">Danger!</h4>
+            <p class="mb-0 mt-0"><%=error_msg%></p>
+        </div>
+    <% } else if (typeof warning_msg !== 'undefined') { %>
+
+    <!-- Warning msg -->
+        <div class="alert alert-dismissible alert-warning">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <h4 class="alert-heading mb-0">Warning!</h4>
+            <p class="mb-0"><%=warning_msg%></p>
+        </div>
+    <!-- Success msg -->
+     <% } else if (typeof success_msg !== 'undefined') { %>
+        <div class="alert alert-dismissible alert-success">
+            <h4 class="alert-heading mb-0 mb-0">Success!</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <p class="mb-0"><%=success_msg%></p>
+        </div>
+    <!--  -->
+    <% } %>
+
+    <div class="container bg-light p-3 mt-5">
+        <h1 class="text-center">Change Admin</h1> <hr>
+        <form action="" method="post" class="text-center" onsubmit="check2Password(event)">
+            <div class="mb-3">
+                <label for="">Username</label>
+                <input type="text" minlength="4" maxlength="25" name="username" id="username" placeholder="username" class="form-control text-center" required>
+                <small style="color: red;" id="err_username"></small>
+            </div>
+            <div class="mb-3">
+                <label for="">Password</label>
+                <input type="password" minlength="4" name="password" id="password" placeholder="password" class="form-control text-center" required>
+            </div>
+            <div class="mb-3">
+                <label for="">Confirm password</label>
+                <input type="password" minlength="4" name="confirm_password" id="confirm_password" placeholder="confirm password" class="form-control text-center" required>
+                <small style="color: red;" id="not_same"></small>
+            </div>
+            <div class="mb-3">
+                <label for="">Gmail</label>
+                <input type="email" name="email" id="email" placeholder="Gmail" class="form-control text-center" required>
+                <button type="button" onclick="send_email()" id="sendCode">Send code</button>
+                <small style="color: red;" id="err_email"></small>
+            </div>
+            <div class="mb-3" id="code-container" style="display:<%=typeof sentCode != 'undefined' ? 'block' : 'none'%>;">
+                <label for="">Code</label>
+                <input type="text" maxlength="4" minlength="4" name="code" id="code" placeholder="Code" class="form-control text-center" required>
+                <small>We have sent you a code to your email, input it here</small>
+            </div>
+            <input type="submit" value="Change" class="btn btn-primary" id="sub">
+        </form>
+    </div> 
+    <% if (typeof sentCode != 'undefined') { %>
+        <script>
+            document.getElementById("sub").style.display = '';
+        </script>
+    <% } else { %>
+        <script>
+            document.getElementById("sub").style.display = 'none';
+        </script>
+    <% } %>
+    <%- include("../../components/footer") %>
+</body>
+<script>
+    document.getElementById("confirm_password").addEventListener("keyup", (e) => {
+        if (document.getElementById("confirm_password").value !== document.getElementById("password").value) {
+            document.getElementById("not_same").textContent = "*The two password field in not the same!";
+        } else {
+            document.getElementById("not_same").textContent = "";
+        };
+    });
+    let time = 60;
+    function timeCount() {
+        setTimeout(() => {
+            time--;
+            if (time > 0) {
+                timeCount();        
+                document.getElementById("sendCode").textContent = `Re-send code (${time})`;
+            }
+        }, 1000);
+        if (time <= 1) {
+            document.getElementById("sendCode").textContent = "Re-Send code";
+            time = 60;
+            document.getElementById("sendCode").disabled = false;
+        }
+    }
+
+    function send_email() {
+        document.getElementById("sendCode").disabled = true;
+        timeCount()
+        if (!document.getElementById("email").value) document.getElementById("err_email").textContent = "*Input email"
+        else if (!document.getElementById("username").value) document.getElementById("err_username").textContent = "*Input username"
+        else {
+            document.getElementById("err_email").textContent = "";
+            document.getElementById("err_username").textContent = ""
+            fetch("/login/send-email/change-admin", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username:document.getElementById("username").value,
+                    email:document.getElementById("email").value,
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.invalid_form) {
+                    alert(data.invalid_form);
+                } else if (data.err) {
+                    alert(data.err);
+                    location.reload();
+                } else if (data.success) {
+                    document.getElementById("code-container").style.display = 'block';
+                    document.getElementById("sub").style.display = '';
+                }
+            })
+        };
+    }
+    function check2Password(e) {
+        e.preventDefault();
+        if (document.getElementById("password").value == document.getElementById("confirm_password").value) {
+            document.querySelector("form").submit();
+        }
+    }
+</script>
+</html>

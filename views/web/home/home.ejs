@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLinEt ⁜ Home</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .container {
+            box-shadow: 10px 10px 15px rgba(0,0,0,.5);
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+    <%- include("../../components/header", {
+        catagory:typeof ___laptop_catagory !== 'undefined' ? ___laptop_catagory : undefined,
+        isAdmin:___isAdminLogin,
+    }) %> 
+
+    <!-- Danger msg -->
+    <% if (typeof error_msg !== 'undefined') { %>
+        <div class="alert alert-dismissible alert-danger" id="msg">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <h4 class="alert-heading mb-0 mb-0">Danger!</h4>
+            <p class="mb-0 mt-0"><%=error_msg%></p>
+        </div>
+    <% } else if (typeof warning_msg !== 'undefined') { %>
+
+    <!-- Warning msg -->
+        <div class="alert alert-dismissible alert-warning">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <h4 class="alert-heading mb-0">Warning!</h4>
+            <p class="mb-0"><%=warning_msg%></p>
+        </div>
+        
+    <!-- Success msg -->
+    <% } else if (typeof success_msg !== 'undefined') { %>
+        <div class="alert alert-dismissible alert-success">
+            <h4 class="alert-heading mb-0 mb-0">Success!</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <p class="mb-0"><%=success_msg%></p>
+        </div>
+    <!--  -->
+    <% } %>
+
+    <div class="container bg-light p-3 mt-3">
+        <% if (typeof ___swiper_info != "undefined" || ___swiper_info) { %>
+            <%- include("components/swiper", {
+                swipers: ___swiper_info,
+            }) %> <hr>
+        <% } %>
+        <!-- Et hio pia -->
+        <h1 class="text-center">Gaming Laptop in <span style="color: green;">ET</span><span style="color: gold;">HIO</span><span style="color: red;">PIA</span> </h1>
+        <div class="row">
+            <% ___show_pc.forEach(pc => { %>
+                <div class="col-md-4">
+                    <%- include("components/show-pc", {
+                        pc:pc,
+                    }) %>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+
+    <%- include("../../components/footer") %>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLinEt ⁜ <%=selectedCatagory%></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .container {
+            box-shadow: 10px 10px 15px rgba(0,0,0,.5);
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+    <%- include("../../components/header", {
+        catagory:typeof ___laptop_catagory !== 'undefined' ? ___laptop_catagory : undefined,
+        isAdmin:___isAdminLogin,
+    }) %>
+    <div class="container bg-light p-3 mt-3">
+        <p class="text-end m-0"><%=pcs.length%> result found</p>
+        <h2 class="mb-4 text-center" style="text-transform: capitalize;">Showing: <%= selectedCatagory %> Laptops</h2> <hr>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <% pcs.forEach(pc => { %>
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="<%= pc.img_1 %>" class="card-img-top" alt="<%= pc.model %>" style="height: 200px; object-fit: cover;">
+                        
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold"><%= pc.model %></h5>
+                            <p class="text-muted mb-2"><%= pc.processor %> | <%= pc.ram %> RAM</p>
+                            <p class="small text-secondary"><%= pc.description.length > 80 ? pc.description.substring(0, 80) + '...' : pc.description %></p>
+                        </div>
+                        
+                        <div class="card-footer bg-white border-0">
+                            <% if (typeof is_edit == "undefined") { %>
+                                <a href="/laptop/<%= pc.id %>" class="btn btn-outline-primary w-100">View Details</a>
+                            <% } else { %>
+                                <a href="/admin/edit/<%= pc.id %>" class="btn btn-outline-primary w-100">Edit</a>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+    <%- include("../../components/footer") %>
+</body>
+</html>
